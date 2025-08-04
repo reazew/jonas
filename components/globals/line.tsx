@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from "react"
 
-interface MouseEvent {
+interface CustomMouseEvent {
   movementY: number
   clientX: number
 }
@@ -67,7 +67,7 @@ export default function Line({ audioSrc = "/sounds/guitar-string.mp3", volume = 
     }
   }
 
-  const manageMouseMove = (e: MouseEvent) => {
+  const manageMouseMove = (e: CustomMouseEvent) => {
     const { movementY, clientX } = e
 
     const pathBound = path.current?.getBoundingClientRect()
