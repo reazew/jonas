@@ -266,7 +266,7 @@ export default function CustomButton({
         {loading && (
           <motion.div
             animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" as const }}
             className="w-4 h-4 border-2 border-current border-t-transparent rounded-full mr-2"
           />
         )}

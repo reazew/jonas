@@ -1,15 +1,15 @@
 export const transitions = {
   fast: {
     duration: 0.2,
-    ease: "easeInOut"
+    ease: "easeInOut" as const
   },
   normal: {
     duration: 0.4,
-    ease: "easeInOut"
+    ease: "easeInOut" as const
   },
   slow: {
     duration: 0.8,
-    ease: "easeInOut"
+    ease: "easeInOut" as const
   },
   spring: {
     type: "spring",

@@ -14,7 +14,7 @@ export const audioWaveform = {
     transition: {
       duration: 1.5,
       repeat: Infinity,
-      ease: "easeInOut"
+      ease: "easeInOut" as const
     }
   },
   
@@ -30,7 +30,7 @@ export const spinner = {
   transition: { 
     duration: 2, 
     repeat: Infinity, 
-    ease: "linear" 
+    ease: "linear" as const
   }
 }
 
@@ -42,7 +42,7 @@ export const pulse = {
   transition: { 
     duration: 1.5, 
     repeat: Infinity,
-    ease: "easeInOut"
+    ease: "easeInOut" as const
   }
 }
 
@@ -61,7 +61,7 @@ export const dots = {
     transition: {
       duration: 0.6,
       repeat: Infinity,
-      ease: "easeInOut"
+      ease: "easeInOut" as const
     }
   }
 } 

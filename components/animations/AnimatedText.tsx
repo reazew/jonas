@@ -50,7 +50,7 @@ export default function AnimatedText({
           transition={{
             duration: 0.3,
             delay: delay + (index * staggerDelay),
-            ease: "easeOut"
+            ease: "easeOut" as const
           }}
           className="inline-block"
         >

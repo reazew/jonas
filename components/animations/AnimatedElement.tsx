@@ -76,7 +76,7 @@ export default function AnimatedElement({
       transition={{
         duration: duration || 0.4,
         delay,
-        ease: "easeInOut"
+        ease: "easeInOut" as const
       }}
       className={className}
       {...props}
