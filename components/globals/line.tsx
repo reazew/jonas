@@ -1,129 +1,160 @@
-"use client";
-import { useEffect, useRef, useState } from "react";
+"use client"
+import React, { useEffect, useRef, useState } from "react"
 
 interface MouseEvent {
-  movementY: number;
-  clientX: number;
+  movementY: number
+  clientX: number
 }
 
 interface LineProps {
-  audioSrc?: string; // URL do arquivo de áudio
-  volume?: number; // Volume do áudio (0-1)
+  audioSrc?: string
+  volume?: number
 }
 
 export default function Line({ audioSrc = "/sounds/guitar-string.mp3", volume = 0.5 }: LineProps) {
-  const path = useRef<SVGPathElement>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [isAudioLoaded, setIsAudioLoaded] = useState(false);
+  const path = useRef<SVGPathElement>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const [isAudioLoaded, setIsAudioLoaded] = useState(false)
 
-  let progress = 0;
-  let x = 0.5;
-  let time = Math.PI / 2;
-  let reqId: number | null = null;
-  let isPlaying = false;
+  let progress = 0
+  let x = 0.5
+  let time = Math.PI / 2
+  let reqId: number | null = null
 
   useEffect(() => {
-    setPath(progress);
+    setPath(progress)
     
-    // Inicializar o áudio
     if (audioSrc) {
-      audioRef.current = new Audio(audioSrc);
-      audioRef.current.volume = volume;
-      audioRef.current.preload = "auto";
+      audioRef.current = new Audio(audioSrc)
+      audioRef.current.volume = volume
+      audioRef.current.preload = "auto"
       
       audioRef.current.addEventListener("canplaythrough", () => {
-        setIsAudioLoaded(true);
-      });
+        setIsAudioLoaded(true)
+      })
       
       audioRef.current.addEventListener("ended", () => {
-        isPlaying = false;
-      });
+        // Audio ended
+      })
     }
-  }, [audioSrc, volume]);
+  }, [audioSrc, volume])
 
   const setPath = (progress: number) => {
-    const width = window.innerWidth * 1;
+    const width = window.innerWidth * 1
 
     path.current?.setAttributeNS(
       null,
       "d",
       `M0 250 Q${width * x} ${250 + progress}, ${width} 250`
-    );
-  };
+    )
+  }
 
-  const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
+  const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a
 
   const playAudio = () => {
     if (audioRef.current && isAudioLoaded) {
-      audioRef.current.currentTime = 0; // Reinicia o áudio
+      audioRef.current.currentTime = 0
       audioRef.current.play().catch(error => {
-        console.error("Erro ao tocar áudio:", error);
-      });
-      // Remove a verificação de isPlaying para permitir repetição
+        console.error("Erro ao tocar áudio:", error)
+      })
     }
-  };
+  }
 
   const manageMouseEnter = () => {
     if (reqId) {
-      cancelAnimationFrame(reqId);
-      resetAnimation();
+      cancelAnimationFrame(reqId)
+      resetAnimation()
     }
-    
-    // Remove o som do mouseEnter - não toca mais aqui
-  };
+  }
 
   const manageMouseMove = (e: MouseEvent) => {
-    const { movementY, clientX } = e;
+    const { movementY, clientX } = e
 
-    const pathBound = path.current?.getBoundingClientRect();
+    const pathBound = path.current?.getBoundingClientRect()
 
     if (pathBound) {
-      x = (clientX - pathBound.left) / pathBound.width;
-      progress += movementY;
-      setPath(progress);
+      x = (clientX - pathBound.left) / pathBound.width
+      progress += movementY * 0.5
+      setPath(progress)
     }
-  };
+  }
 
   const manageMouseLeave = () => {
-    // Toca o som quando a linha "solta" do cursor
-    playAudio();
-    animateOut();
-  };
+    if (Math.abs(progress) > 5) {
+      playAudio()
+    }
+    animateOut()
+  }
+
+  const manageClick = (e: React.MouseEvent) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const clickX = e.clientX - rect.left
+    const clickRatio = clickX / rect.width
+    
+    x = clickRatio
+    
+    progress = 50
+    
+    setPath(progress)
+    
+    playAudio()
+    
+    animateBounce()
+  }
+
+  const animateBounce = () => {
+    const newProgress = progress * Math.sin(time)
+
+    progress = lerp(progress, 0, 0.08)
+
+    time += 0.3
+
+    setPath(newProgress)
+
+    if (Math.abs(progress) > 0.5) {
+      reqId = requestAnimationFrame(animateBounce)
+    } else {
+      resetAnimation()
+    }
+  }
 
   const animateOut = () => {
-    const newProgress = progress * Math.sin(time);
+    const newProgress = progress * Math.sin(time)
 
-    progress = lerp(progress, 0, 0.025);
+    progress = lerp(progress, 0, 0.025)
 
-    time += 0.2;
+    time += 0.2
 
-    setPath(newProgress);
+    setPath(newProgress)
 
     if (Math.abs(progress) > 0.75) {
-      reqId = requestAnimationFrame(animateOut);
+      reqId = requestAnimationFrame(animateOut)
     } else {
-      resetAnimation();
+      resetAnimation()
     }
-  };
+  }
 
   const resetAnimation = () => {
-    time = Math.PI / 2;
-    progress = 0;
-  };
+    time = Math.PI / 2
+    progress = 0
+  }
 
   return (
     <div className="relative w-full h-px mb-5">
       <div
         onMouseEnter={() => {
-          manageMouseEnter();
+          manageMouseEnter()
         }}
         onMouseMove={(e) => {
-          manageMouseMove(e);
+          manageMouseMove(e)
         }}
         onMouseLeave={() => {
-          manageMouseLeave();
+          manageMouseLeave()
         }}
-        className="relative z-10 h-10 w-full top-[-40px]"
+        onClick={(e) => {
+          manageClick(e)
+        }}
+        className="relative z-10 h-10 w-full top-[-40px] cursor-pointer"
       ></div>
       <svg className="absolute w-full h-[500px] top-[-250px]">
         <path
