@@ -17,7 +17,6 @@ interface AnimatedBackgroundProps {
   className?: string
 }
 
-// Estrutura de dados das tecnologias
 const technologies = [
   { label: "JavaScript", icon: JsIcon },
   { label: "Next.js", icon: NextIcon },
@@ -36,6 +35,7 @@ interface IconState {
   vx: number
   vy: number
   element: HTMLElement
+  size: number
 }
 
 export default function AnimatedBackground({ className = "" }: AnimatedBackgroundProps) {
@@ -53,7 +53,6 @@ export default function AnimatedBackground({ className = "" }: AnimatedBackgroun
     const icons = iconsRef.current
     const iconsArray = Array.from(icons.children) as HTMLElement[]
     
-    // Inicializar bounds do container
     const updateBounds = () => {
       const rect = container.getBoundingClientRect()
       containerBoundsRef.current = {
@@ -65,18 +64,32 @@ export default function AnimatedBackground({ className = "" }: AnimatedBackgroun
     updateBounds()
     window.addEventListener('resize', updateBounds)
 
-    // Inicializar estados dos ícones
+    const getIconSize = (label: string) => {
+      switch (label) {
+        case "Java":
+        case "MySQL":
+          return 96
+        case "PostgreSQL":
+        case "PHP":
+        case "React":
+        case "Next.js":
+          return 80
+        case "JavaScript":
+        case "TypeScript":
+        default:
+          return 56
+      }
+    }
+
     const initializeIconStates = () => {
       iconStatesRef.current = iconsArray.map((icon, index) => {
         const bounds = containerBoundsRef.current!
-        const size = 60 // Tamanho aproximado do ícone
+        const size = getIconSize(technologies[index].label)
         
-        // Posição inicial aleatória
         const x = Math.random() * (bounds.width - size)
         const y = Math.random() * (bounds.height - size)
         
-        // Velocidade inicial aleatória
-        const speed = 0.5 + Math.random() * 1.5
+        const speed = 0.3 + Math.random() * 0.4
         const angle = Math.random() * Math.PI * 2
         const vx = Math.cos(angle) * speed
         const vy = Math.sin(angle) * speed
@@ -86,57 +99,58 @@ export default function AnimatedBackground({ className = "" }: AnimatedBackgroun
           y,
           vx,
           vy,
-          element: icon
+          element: icon,
+          size
         }
       })
     }
 
-    // Função de animação
     const animate = () => {
       const bounds = containerBoundsRef.current!
-      const iconSize = 60
       const states = iconStatesRef.current
       
       states.forEach((state, index) => {
-        // Atualizar posição
         state.x += state.vx
         state.y += state.vy
         
-        // Verificar colisão com bordas
-        if (state.x <= 0 || state.x >= bounds.width - iconSize) {
+        if (state.x <= 0 || state.x >= bounds.width - state.size) {
           state.vx = -state.vx
-          state.x = Math.max(0, Math.min(state.x, bounds.width - iconSize))
+          state.x = Math.max(0, Math.min(state.x, bounds.width - state.size))
         }
         
-        if (state.y <= 0 || state.y >= bounds.height - iconSize) {
+        if (state.y <= 0 || state.y >= bounds.height - state.size) {
           state.vy = -state.vy
-          state.y = Math.max(0, Math.min(state.y, bounds.height - iconSize))
+          state.y = Math.max(0, Math.min(state.y, bounds.height - state.size))
         }
         
-        // Verificar colisão entre ícones
         states.forEach((otherState, otherIndex) => {
           if (index !== otherIndex) {
-            const dx = state.x - otherState.x
-            const dy = state.y - otherState.y
+            const dx = (state.x + state.size/2) - (otherState.x + otherState.size/2)
+            const dy = (state.y + state.size/2) - (otherState.y + otherState.size/2)
             const distance = Math.sqrt(dx * dx + dy * dy)
+            const minDistance = (state.size + otherState.size) / 2
             
-            if (distance < iconSize) {
-              // Colisão detectada - inverter velocidades
+            if (distance < minDistance) {
               const angle = Math.atan2(dy, dx)
-              const speed1 = Math.sqrt(state.vx * state.vx + state.vy * state.vy)
-              const speed2 = Math.sqrt(otherState.vx * otherState.vx + otherState.vy * otherState.vy)
               
-              // Trocar velocidades
-              const tempVx = state.vx
-              const tempVy = state.vy
+              const relativeVx = state.vx - otherState.vx
+              const relativeVy = state.vy - otherState.vy
               
-              state.vx = otherState.vx
-              state.vy = otherState.vy
-              otherState.vx = tempVx
-              otherState.vy = tempVy
+              const normalVx = dx / distance
+              const normalVy = dy / distance
               
-              // Separar os ícones para evitar colisão contínua
-              const separation = iconSize - distance + 5
+              const dotProduct = relativeVx * normalVx + relativeVy * normalVy
+              
+              if (dotProduct < 0) {
+                const impulse = -dotProduct
+                
+                state.vx += impulse * normalVx
+                state.vy += impulse * normalVy
+                otherState.vx -= impulse * normalVx
+                otherState.vy -= impulse * normalVy
+              }
+              
+              const separation = minDistance - distance + 2
               const sepX = (dx / distance) * separation * 0.5
               const sepY = (dy / distance) * separation * 0.5
               
@@ -148,24 +162,20 @@ export default function AnimatedBackground({ className = "" }: AnimatedBackgroun
           }
         })
         
-        // Aplicar posição ao elemento
         state.element.style.transform = `translate(${state.x}px, ${state.y}px)`
       })
       
       animationRef.current = requestAnimationFrame(animate)
     }
 
-    // Inicializar e começar animação com delay para fade-in
     const startAnimation = () => {
       initializeIconStates()
       animate()
       setIsVisible(true)
     }
 
-    // Delay para evitar o glitch inicial
     const timer = setTimeout(startAnimation, 100)
 
-    // Cleanup
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
@@ -175,7 +185,6 @@ export default function AnimatedBackground({ className = "" }: AnimatedBackgroun
     }
   }, [])
 
-  // Função para obter tamanho do ícone baseado na tecnologia
   const getIconSize = (label: string) => {
     switch (label) {
       case "Java":

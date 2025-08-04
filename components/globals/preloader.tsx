@@ -52,7 +52,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             </AnimatedElement>
             
             <AnimatedElement variant="fadeInUp" delay={0.6}>
-              <p className="text-gray-400">
+              <p>
                 Full Stack Developer
               </p>
             </AnimatedElement>
