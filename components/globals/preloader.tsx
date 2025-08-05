@@ -23,7 +23,7 @@ const CodeTerminal = ({ className = "" }: { className?: string }) => {
     "> next dev",
     "▲ Next.js 15.4.5",
     "- Local:        http://localhost:3000",
-    "- Network:      http://26.92.74.103:3000",
+    "- Network:      http://00.00.00.000:3000",
     "✓ Starting...",
     "✓ Ready in 7s"
   ]
@@ -45,9 +45,9 @@ const CodeTerminal = ({ className = "" }: { className?: string }) => {
           
           setTimeout(() => {
             setCurrentCommand(prev => prev + 1)
-          }, 800)
+          }, 400)
         }
-      }, 80)
+      }, 50)
     }
 
     if (currentCommand < commands.length) {
@@ -59,8 +59,8 @@ const CodeTerminal = ({ className = "" }: { className?: string }) => {
     <div className={`${className}`}>
       <svg
         width="600"
-        height="450"
-        viewBox="0 0 600 450"
+        height="500"
+        viewBox="0 0 600 500"
         className="w-full h-auto"
       >
         <defs>
@@ -77,7 +77,7 @@ const CodeTerminal = ({ className = "" }: { className?: string }) => {
           x="10"
           y="10"
           width="580"
-          height="430"
+          height="480"
           rx="8"
           fill="#000000"
           stroke="#ffffff"
@@ -96,34 +96,34 @@ const CodeTerminal = ({ className = "" }: { className?: string }) => {
           strokeWidth="1"
         />
         
-        <circle cx="22" cy="37" r="3" fill="#ff0000" />
-        <circle cx="30" cy="37" r="3" fill="#ffff00" />
-        <circle cx="38" cy="37" r="3" fill="#00ff00" />
-        
-        <text x="50" y="45" fill="#ffffff" fontSize="16" fontFamily="monospace">
+        <text x="70" y="37" fill="#ffffff" fontSize="16" fontFamily="monospace">
           Terminal - jonas-messias
         </text>
+
+        <circle cx="30" cy="33" r="5" fill="#ff0000" />
+        <circle cx="43" cy="33" r="5" fill="#ffff00" />
+        <circle cx="56" cy="33" r="5" fill="#00ff00" />
         
         <rect
           x="20"
           y="60"
           width="560"
-          height="370"
+          height="420"
           fill="#000000"
           stroke="#333333"
           strokeWidth="1"
         />
         
-        <text x="25" y="85" fill="#ffffff" fontSize="14" fontFamily="monospace">
-          jonas on main via v.22.11.0
+        <text x="25" y="85" fill="#00ff00" fontSize="14" fontFamily="monospace">
+          ❯
         </text>
         
         {!showTypedCommand ? (
-          <text x="25" y="115" fill="#ffffff" fontSize="14" fontFamily="monospace">
+          <text x="40" y="85" fill="#ffffff" fontSize="14" fontFamily="monospace">
             {typingText}
             {isTyping && (
               <motion.rect
-                x={25 + (typingText.length * 8.5)}
+                x={40 + (typingText.length * 8.5)}
                 y="105"
                 width="3"
                 height="18"
@@ -135,107 +135,93 @@ const CodeTerminal = ({ className = "" }: { className?: string }) => {
             )}
           </text>
         ) : (
-          <text x="25" y="115" fill="#ffffff" fontSize="14" fontFamily="monospace">
+          <text x="40" y="85" fill="#ffffff" fontSize="14" fontFamily="monospace">
             npm run dev
           </text>
         )}
         
         {currentCommand >= 1 && (
-          <motion.text
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+          <text
+            x="25"
+            y="115"
+            fill="#ffffff"
+            fontSize="14"
+            fontFamily="monospace"
+          >
+            &gt; jonas@0.1.0 dev
+          </text>
+        )}
+        
+        {currentCommand >= 2 && (
+          <text
             x="25"
             y="145"
             fill="#ffffff"
             fontSize="14"
             fontFamily="monospace"
           >
-            &gt; jonas@0.1.0 dev
-          </motion.text>
-        )}
-        
-        {currentCommand >= 2 && (
-          <motion.text
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            x="25"
-            y="175"
-            fill="#ffffff"
-            fontSize="14"
-            fontFamily="monospace"
-          >
             &gt; next dev
-          </motion.text>
+          </text>
         )}
         
         {currentCommand >= 3 && (
-          <motion.text
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+          <text
+            x="25"
+            y="175"
+            fill="#8b5cf6"
+            fontSize="14"
+            fontFamily="monospace"
+          >
+            ▲ Next.js 15.4.5
+          </text>
+        )}
+        
+        {currentCommand >= 4 && (
+          <text
             x="25"
             y="205"
             fill="#ffffff"
             fontSize="14"
             fontFamily="monospace"
           >
-            ▲ Next.js 15.4.5
-          </motion.text>
+            - Local:        http://localhost:3000
+          </text>
         )}
         
-        {currentCommand >= 4 && (
-          <motion.text
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+        {currentCommand >= 5 && (
+          <text
             x="25"
             y="235"
             fill="#ffffff"
             fontSize="14"
             fontFamily="monospace"
           >
-            - Local:        http://localhost:3000
-          </motion.text>
-        )}
-        
-        {currentCommand >= 5 && (
-          <motion.text
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            x="25"
-            y="265"
-            fill="#ffffff"
-            fontSize="14"
-            fontFamily="monospace"
-          >
-            - Network:      http://26.92.74.103:3000
-          </motion.text>
+            - Network:      http://00.00.00.000:3000
+          </text>
         )}
         
         {currentCommand >= 6 && (
-          <motion.text
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+          <text
+            x="25"
+            y="265"
+            fill="#00ff00"
+            fontSize="14"
+            fontFamily="monospace"
+          >
+            ✓ Starting...
+          </text>
+        )}
+        
+        {currentCommand >= 7 && (
+          <text
             x="25"
             y="295"
             fill="#00ff00"
             fontSize="14"
             fontFamily="monospace"
           >
-            ✓ Starting...
-          </motion.text>
-        )}
-        
-        {currentCommand >= 7 && (
-          <motion.text
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            x="25"
-            y="325"
-            fill="#00ff00"
-            fontSize="14"
-            fontFamily="monospace"
-          >
             ✓ Ready in 7s
-          </motion.text>
+          </text>
         )}
       </svg>
     </div>
@@ -245,12 +231,16 @@ const CodeTerminal = ({ className = "" }: { className?: string }) => {
 export default function Preloader({ onComplete }: PreloaderProps) {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
+  const [isExiting, setIsExiting] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLoading(false)
-      setShowModal(true)
-    }, 10000)
+      setIsExiting(true)
+      setTimeout(() => {
+        setLoading(false)
+        setShowModal(true)
+      }, 1000) // Wait for exit animation to complete
+    }, 12000) // Increased to 12000 to ensure all commands are displayed
 
     return () => clearTimeout(timer)
   }, [])
@@ -272,9 +262,20 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         >
           <AnimatedBackground />
           
-          <AnimatedElement variant="scaleIn" className="text-center relative z-10">
+          <motion.div
+            initial={{ opacity: 1, scale: 1 }}
+            animate={{ 
+              opacity: isExiting ? 0 : 1, 
+              scale: isExiting ? 0.8 : 1 
+            }}
+            transition={{ 
+              duration: 1,
+              ease: "easeInOut"
+            }}
+            className="text-center relative z-10"
+          >
             <CodeTerminal className="mb-8" />
-          </AnimatedElement>
+          </motion.div>
         </motion.div>
       )}
 
