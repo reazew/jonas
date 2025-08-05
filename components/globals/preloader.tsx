@@ -232,13 +232,11 @@ const CodeTerminal = ({ className = "" }: { className?: string }) => {
 export default function Preloader({ onComplete }: PreloaderProps) {
   const [loading, setLoading] = useState(true)
   const [showModal, setShowModal] = useState(false)
-  const [isTransitioning, setIsTransitioning] = useState(false)
   const [isDetaching, setIsDetaching] = useState(false)
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsDetaching(true)
-      setIsTransitioning(true)
       setLoading(false)
       setShowModal(true)
     }, 0)
@@ -248,7 +246,6 @@ export default function Preloader({ onComplete }: PreloaderProps) {
 
   const handleModalClose = () => {
     setIsDetaching(true)
-    setIsTransitioning(true)
     setShowModal(false)
     setTimeout(() => {
       onComplete()
@@ -311,10 +308,10 @@ export default function Preloader({ onComplete }: PreloaderProps) {
               x: { duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] },
               scale: { duration: 0.8, delay: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }
             }}
-            className="fixed inset-0 flex items-center justify-center p-4 bg-black"
+            className="fixed inset-0 flex items-center justify-center bg-black"
             onClick={handleModalClose}
           >
-            <AnimatedBackground isTransitioning={isTransitioning}/>
+            <AnimatedBackground />
             
             <motion.div
               initial={{ 
@@ -362,7 +359,9 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                   magnetic
                   className="w-full border-2 border-black"
                 >
-                  Tap to start
+                  <span className="animate-pulse">
+                    Tap to start
+                  </span>
                 </Button>
               </AnimatedElement>
             </motion.div>

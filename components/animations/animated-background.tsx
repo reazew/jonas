@@ -16,7 +16,6 @@ import { useEffect, useRef, useState } from "react"
 
 interface AnimatedBackgroundProps {
   className?: string
-  isTransitioning?: boolean
 }
 
 const technologies = [
@@ -40,7 +39,7 @@ interface IconState {
   size: number
 }
 
-export default function AnimatedBackground({ className = "", isTransitioning = false }: AnimatedBackgroundProps) {
+export default function AnimatedBackground({ className = "" }: AnimatedBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const iconsRef = useRef<HTMLDivElement>(null)
   const animationRef = useRef<number>()
@@ -67,27 +66,27 @@ export default function AnimatedBackground({ className = "", isTransitioning = f
     updateBounds()
     window.addEventListener('resize', updateBounds)
 
-    const getIconSize = (label: string) => {
+    const getIconPixelSize = (label: string) => {
       switch (label) {
         case "Java":
         case "MySQL":
-          return 96
+          return 140
         case "PostgreSQL":
         case "PHP":
         case "React":
         case "Next.js":
-          return 80
+          return 120
         case "JavaScript":
         case "TypeScript":
         default:
-          return 56
+          return 100
       }
     }
 
     const initializeIconStates = () => {
       iconStatesRef.current = iconsArray.map((icon, index) => {
         const bounds = containerBoundsRef.current!
-        const size = getIconSize(technologies[index].label)
+        const size = getIconPixelSize(technologies[index].label)
         
         const x = Math.random() * (bounds.width - size)
         const y = Math.random() * (bounds.height - size)
@@ -113,11 +112,8 @@ export default function AnimatedBackground({ className = "", isTransitioning = f
       const states = iconStatesRef.current
       
       states.forEach((state, index) => {
-        // Slow down animation during transition
-        const speedMultiplier = isTransitioning ? 0.3 : 1
-        
-        state.x += state.vx * speedMultiplier
-        state.y += state.vy * speedMultiplier
+        state.x += state.vx
+        state.y += state.vy
         
         if (state.x <= 0 || state.x >= bounds.width - state.size) {
           state.vx = -state.vx
@@ -195,23 +191,22 @@ export default function AnimatedBackground({ className = "", isTransitioning = f
       window.removeEventListener('resize', updateBounds)
       clearTimeout(timer)
     }
-  }, [isTransitioning])
+  }, [])
 
   const getIconSize = (label: string) => {
     switch (label) {
       case "Java":
       case "MySQL":
-        return "w-24 h-24"
+        return "w-30 h-30"
       case "PostgreSQL":
       case "PHP":
       case "React":
       case "Next.js":
-        return "w-20 h-20"
-      case "Next.js":
+        return "w-28 h-28"
       case "JavaScript":
       case "TypeScript":
       default:
-        return "w-14 h-14" 
+        return "w-24 h-24" 
     }
   }
 
@@ -221,8 +216,8 @@ export default function AnimatedBackground({ className = "", isTransitioning = f
       initial={{ opacity: 0 }}
       animate={{ 
         opacity: isVisible ? 1 : 0,
-        scale: isTransitioning ? 0.95 : 1,
-        x: isTransitioning ? -20 : 0
+        scale: 1,
+        x: 0
       }}
       transition={{ 
         duration: 0.8,
