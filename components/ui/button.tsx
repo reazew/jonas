@@ -132,7 +132,7 @@ export default function CustomButton({
   }
 
   const baseStyles =
-    "relative inline-flex items-center justify-center px-6 py-3 font-medium text-white bg-black border border-white overflow-hidden transition-all duration-300 ease-out cursor-pointer"
+    "relative inline-flex items-center justify-center px-6 py-3 font-medium text-white bg-black  border-whiteborder overflow-hidden transition-all duration-300 ease-out cursor-pointer"
 
   const content = (
     <Button

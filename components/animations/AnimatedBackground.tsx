@@ -11,10 +11,12 @@ import {
   ReactIcon,
   TypeScriptIcon
 } from "@/components/globals/icons"
+import { motion } from "framer-motion"
 import { useEffect, useRef, useState } from "react"
 
 interface AnimatedBackgroundProps {
   className?: string
+  isTransitioning?: boolean
 }
 
 const technologies = [
@@ -38,13 +40,14 @@ interface IconState {
   size: number
 }
 
-export default function AnimatedBackground({ className = "" }: AnimatedBackgroundProps) {
+export default function AnimatedBackground({ className = "", isTransitioning = false }: AnimatedBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const iconsRef = useRef<HTMLDivElement>(null)
   const animationRef = useRef<number>()
   const iconStatesRef = useRef<IconState[]>([])
   const containerBoundsRef = useRef<{ width: number; height: number }>()
   const [isVisible, setIsVisible] = useState(false)
+  const [visibleIcons, setVisibleIcons] = useState<number[]>([])
 
   useEffect(() => {
     if (!containerRef.current || !iconsRef.current) return
@@ -110,8 +113,11 @@ export default function AnimatedBackground({ className = "" }: AnimatedBackgroun
       const states = iconStatesRef.current
       
       states.forEach((state, index) => {
-        state.x += state.vx
-        state.y += state.vy
+        // Slow down animation during transition
+        const speedMultiplier = isTransitioning ? 0.3 : 1
+        
+        state.x += state.vx * speedMultiplier
+        state.y += state.vy * speedMultiplier
         
         if (state.x <= 0 || state.x >= bounds.width - state.size) {
           state.vx = -state.vx
@@ -172,6 +178,12 @@ export default function AnimatedBackground({ className = "" }: AnimatedBackgroun
       initializeIconStates()
       animate()
       setIsVisible(true)
+      
+      technologies.forEach((_, index) => {
+        setTimeout(() => {
+          setVisibleIcons(prev => [...prev, index])
+        }, index * 200 + 300)
+      })
     }
 
     const timer = setTimeout(startAnimation, 100)
@@ -183,7 +195,7 @@ export default function AnimatedBackground({ className = "" }: AnimatedBackgroun
       window.removeEventListener('resize', updateBounds)
       clearTimeout(timer)
     }
-  }, [])
+  }, [isTransitioning])
 
   const getIconSize = (label: string) => {
     switch (label) {
@@ -204,19 +216,31 @@ export default function AnimatedBackground({ className = "" }: AnimatedBackgroun
   }
 
   return (
-    <div 
+    <motion.div 
       ref={containerRef}
+      initial={{ opacity: 0 }}
+      animate={{ 
+        opacity: isVisible ? 1 : 0,
+        scale: isTransitioning ? 0.95 : 1,
+        x: isTransitioning ? -20 : 0
+      }}
+      transition={{ 
+        duration: 0.8,
+        ease: [0.25, 0.46, 0.45, 0.94]
+      }}
       className={`fixed inset-0 overflow-hidden pointer-events-none z-[-1] ${className}`}
     >
-      <div 
+      <motion.div 
         ref={iconsRef} 
-        className={`absolute inset-0 transition-opacity duration-1000 ${
-          isVisible ? 'opacity-100' : 'opacity-0'
-        }`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: isVisible ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+        className={`absolute inset-0`}
       >
         {technologies.map((tech, index) => {
           const IconComponent = tech.icon
           const iconSize = getIconSize(tech.label)
+          const isIconVisible = visibleIcons.includes(index)
           
           return (
             <div
@@ -224,11 +248,24 @@ export default function AnimatedBackground({ className = "" }: AnimatedBackgroun
               className={`absolute flex items-center justify-center opacity-100 hover:opacity-80 transition-opacity duration-300 ${iconSize}`}
               title={tech.label}
             >
-              <IconComponent className="text-white w-full h-full" />
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={isIconVisible ? { 
+                  scale: [0, 1.8, 1]
+                } : { scale: 0 }}
+                transition={{ 
+                  duration: 1,
+                  times: [0, 0.3, 1],
+                  ease: "easeInOut"
+                }}
+                className="w-full h-full"
+              >
+                <IconComponent className="text-white w-full h-full" />
+              </motion.div>
             </div>
           )
         })}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   )
 } 
