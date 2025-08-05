@@ -1,18 +1,16 @@
 'use client'
 
-import gsap from 'gsap'
-import React, { useEffect, useRef } from 'react'
+import gsap from 'gsap';
+import React, { useEffect, useRef } from 'react';
 
 interface MagneticProps {
     children: React.ReactElement;
 }
 
 export default function Magnetic({ children }: MagneticProps) {
-    const magnetic = useRef<HTMLElement>(null);
+    const magnetic = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        console.log(children)
-        
         if (!magnetic.current) return;
         
         const xTo = gsap.quickTo(magnetic.current, "x", {duration: 1.5, ease: "elastic.out(1, 0.3)"})
@@ -25,8 +23,8 @@ export default function Magnetic({ children }: MagneticProps) {
             const {height, width, left, top} = magnetic.current.getBoundingClientRect();
             const x = clientX - (left + width/2)
             const y = clientY - (top + height/2)
-            xTo(x * 1);
-            yTo(y * 1)
+            xTo(x * 0.5);
+            yTo(y * 0.5)
         }
 
         const handleMouseLeave = () => {
@@ -46,6 +44,8 @@ export default function Magnetic({ children }: MagneticProps) {
     }, [children])
 
     return (
-        React.cloneElement(children, {ref: magnetic})
+        <div ref={magnetic} className="inline-block">
+            {children}
+        </div>
     )
 }

@@ -89,7 +89,7 @@ export default function AnimatedBackground({ className = "" }: AnimatedBackgroun
         const x = Math.random() * (bounds.width - size)
         const y = Math.random() * (bounds.height - size)
         
-        const speed = 0.3 + Math.random() * 0.4
+        const speed = 0.5 + Math.random() * 0.4
         const angle = Math.random() * Math.PI * 2
         const vx = Math.cos(angle) * speed
         const vy = Math.sin(angle) * speed

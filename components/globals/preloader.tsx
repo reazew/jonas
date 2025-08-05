@@ -3,6 +3,7 @@
 import AnimatedBackground from "@/components/animations/AnimatedBackground"
 import AnimatedElement from "@/components/animations/AnimatedElement"
 import AnimatedText from "@/components/animations/AnimatedText"
+import Magnetic from "@/components/globals/magnetic"
 import Button from "@/components/ui/button"
 import { AnimatePresence, motion } from "framer-motion"
 import { useEffect, useState } from "react"
@@ -45,7 +46,7 @@ const CodeTerminal = ({ className = "" }: { className?: string }) => {
           
           setTimeout(() => {
             setCurrentCommand(prev => prev + 1)
-          }, 400)
+          }, 200)
         }
       }, 50)
     }
@@ -240,7 +241,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
         setLoading(false)
         setShowModal(true)
       }, 1000)
-    }, 11000)
+    }, 0)
 
     return () => clearTimeout(timer)
   }, [])
@@ -288,48 +289,49 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           onClick={handleModalClose}
         >
           <AnimatedBackground />
-          
-          <AnimatedElement 
-            variant="bounceIn" 
-            className="bg-white p-8 max-w-lg w-full text-center relative z-10"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <AnimatedText 
-              variant="typewriter"
-              className="text-3xl font-bold mb-6 text-black"
-              staggerDelay={0.03}
+          <Magnetic>
+            <AnimatedElement 
+              variant="bounceIn" 
+              className="bg-white/90 backdrop-blur-sm p-8 max-w-lg w-full text-center relative z-10 pointer-events-auto"
+              onClick={(e) => e.stopPropagation()}
             >
-              Welcome to my website!
-            </AnimatedText>
-            
-            <AnimatedElement variant="fadeInUp" delay={0.4}>
               <AnimatedText 
-                variant="slideUp"
-                className="text-black  text-lg"
-                staggerDelay={0.02}
+                variant="typewriter"
+                className="text-3xl font-bold mb-6 text-black"
+                staggerDelay={0.03}
               >
-                Here you will find my projects, skills
+                Welcome to my website!
               </AnimatedText>
-              <AnimatedText 
-                variant="slideUp"
-                className="text-black mb-8 text-lg"
-                staggerDelay={0.02}
-              >
-               and experiences as a developer.
-              </AnimatedText>
+              
+              <AnimatedElement variant="fadeInUp" delay={0.4}>
+                <AnimatedText 
+                  variant="slideUp"
+                  className="text-black  text-lg"
+                  staggerDelay={0.02}
+                >
+                  Here you will find my projects, skills
+                </AnimatedText>
+                <AnimatedText 
+                  variant="slideUp"
+                  className="text-black mb-8 text-lg"
+                  staggerDelay={0.02}
+                >
+                and experiences as a developer.
+                </AnimatedText>
+              </AnimatedElement>
+              
+              <AnimatedElement variant="fadeInUp" delay={0.5}>
+                <Button
+                  onClick={handleModalClose}
+                  magnetic
+                  className="w-full"
+                >
+                  Tap to start
+                </Button>
+              </AnimatedElement>
             </AnimatedElement>
-            
-            <AnimatedElement variant="fadeInUp" delay={1.6}>
-              <Button
-                onClick={handleModalClose}
-                variant="default"
-                size="lg"
-                className="w-full"
-              >
-                Tap to start
-              </Button>
-            </AnimatedElement>
-          </AnimatedElement>
+          </Magnetic>
+
         </motion.div>
       )}
     </AnimatePresence>
