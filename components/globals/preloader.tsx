@@ -239,7 +239,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       setIsDetaching(true)
       setLoading(false)
       setShowModal(true)
-    }, 0)
+    }, 10000)
 
     return () => clearTimeout(timer)
   }, [])
@@ -357,9 +357,9 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                 <Button
                   onClick={handleModalClose}
                   magnetic
-                  className="w-full border-2 border-black"
+                  className="w-full border-2 border-black group" 
                 >
-                  <span className="animate-pulse">
+                  <span className="group-hover:animate-none animate-pulse">
                     Tap to start
                   </span>
                 </Button>

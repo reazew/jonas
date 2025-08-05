@@ -33,11 +33,7 @@ export default function Home() {
             duration: 0.8,
             ease: [0.25, 0.46, 0.45, 0.94]
           }}
-          className="min-h-scree bg-black fixed inset-0 z-50"
-          style={{
-            transformStyle: "preserve-3d",
-            perspective: "1000px"
-          }}
+          className="min-h-screen w-full bg-black"
         >
           <Header />
           <div className="flex flex-col gap-4">
