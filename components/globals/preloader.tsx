@@ -239,8 +239,8 @@ export default function Preloader({ onComplete }: PreloaderProps) {
       setTimeout(() => {
         setLoading(false)
         setShowModal(true)
-      }, 1000) // Wait for exit animation to complete
-    }, 12000) // Increased to 12000 to ensure all commands are displayed
+      }, 1000)
+    }, 11000)
 
     return () => clearTimeout(timer)
   }, [])
@@ -291,71 +291,32 @@ export default function Preloader({ onComplete }: PreloaderProps) {
           
           <AnimatedElement 
             variant="bounceIn" 
-            className="bg-white p-8 max-w-lg w-full text-center border-2 border-black relative z-10"
+            className="bg-white p-8 max-w-lg w-full text-center relative z-10"
             onClick={(e) => e.stopPropagation()}
           >
-            <AnimatedElement variant="fadeInUp" delay={0.2}>
-              <AnimatedText 
-                variant="typewriter"
-                className="text-3xl font-bold mb-6 text-black"
-                staggerDelay={0.05}
-              >
-                Bem-vindo ao meu portfólio!
-              </AnimatedText>
-            </AnimatedElement>
+            <AnimatedText 
+              variant="typewriter"
+              className="text-3xl font-bold mb-6 text-black"
+              staggerDelay={0.03}
+            >
+              Welcome to my website!
+            </AnimatedText>
             
             <AnimatedElement variant="fadeInUp" delay={0.4}>
               <AnimatedText 
                 variant="slideUp"
-                className="text-gray-600 mb-8 text-lg"
+                className="text-black  text-lg"
                 staggerDelay={0.02}
               >
-                Aqui você encontrará meus projetos, habilidades e experiências como desenvolvedor Full Stack.
+                Here you will find my projects, skills
               </AnimatedText>
-            </AnimatedElement>
-            
-            <AnimatedElement variant="fadeInUp" delay={0.6}>
-              <div className="space-y-3 text-sm text-gray-500 mb-8">
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.8 }}
-                  className="flex items-center gap-2"
-                >
-                  <div className="w-2 h-2 bg-black"></div>
-                  <span>Projetos interativos com animações</span>
-                </motion.div>
-                
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1.0 }}
-                  className="flex items-center gap-2"
-                >
-                  <div className="w-2 h-2 bg-black"></div>
-                  <span>Tecnologias modernas (React, Next.js, TypeScript)</span>
-                </motion.div>
-                
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1.2 }}
-                  className="flex items-center gap-2"
-                >
-                  <div className="w-2 h-2 bg-black"></div>
-                  <span>Experiência em desenvolvimento</span>
-                </motion.div>
-                
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 1.4 }}
-                  className="flex items-center gap-2 ml-4"
-                >
-                  <div className="w-2 h-2 bg-black"></div>
-                  <span>Full Stack</span>
-                </motion.div>
-              </div>
+              <AnimatedText 
+                variant="slideUp"
+                className="text-black mb-8 text-lg"
+                staggerDelay={0.02}
+              >
+               and experiences as a developer.
+              </AnimatedText>
             </AnimatedElement>
             
             <AnimatedElement variant="fadeInUp" delay={1.6}>
@@ -365,7 +326,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                 size="lg"
                 className="w-full"
               >
-                Começar
+                Tap to start
               </Button>
             </AnimatedElement>
           </AnimatedElement>
