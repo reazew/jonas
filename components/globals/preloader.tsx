@@ -1,8 +1,8 @@
 "use client"
 
-import AnimatedBackground from "@/components/animations/AnimatedBackground"
-import AnimatedElement from "@/components/animations/AnimatedElement"
-import AnimatedText from "@/components/animations/AnimatedText"
+import AnimatedBackground from "@/components/animations/animated-background"
+import AnimatedElement from "@/components/animations/animated-element"
+import AnimatedText from "@/components/animations/animated-text"
 import Magnetic from "@/components/globals/magnetic"
 import Button from "@/components/ui/button"
 import { AnimatePresence, motion } from "framer-motion"
@@ -238,33 +238,25 @@ export default function Preloader({ onComplete }: PreloaderProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsDetaching(true)
-      setTimeout(() => {
-        setIsTransitioning(true)
-        setTimeout(() => {
-          setLoading(false)
-          setShowModal(true)
-        }, 1200)
-      }, 600)
-    }, 20)
+      setIsTransitioning(true)
+      setLoading(false)
+      setShowModal(true)
+    }, 0)
 
     return () => clearTimeout(timer)
   }, [])
 
   const handleModalClose = () => {
     setIsDetaching(true)
+    setIsTransitioning(true)
+    setShowModal(false)
     setTimeout(() => {
-      setIsTransitioning(true)
-      setTimeout(() => {
-        setShowModal(false)
-        setTimeout(() => {
-          onComplete()
-        }, 800)
-      }, 800)
-    }, 600)
+      onComplete()
+    }, 500)
   }
 
   return (
-    <div className="fixed inset-0 z-50 bg-black">
+    <div className="fixed inset-0 z-50">
       <AnimatePresence mode="wait">
         {loading && (
           <motion.div
@@ -282,15 +274,15 @@ export default function Preloader({ onComplete }: PreloaderProps) {
               scale: 0.8
             }}
             animate={{
-              x: isDetaching ? 0 : 0,
+              x: isDetaching ? "-100%" : 0,
               y: isDetaching ? 0 : 0,
-              scale: isDetaching ? 0.92 : 1
+              scale: isDetaching ? 0.8 : 1
             }}
             transition={{ 
-              duration: 1.2,
-              ease: [0.25, 0.46, 0.45, 0.94]
+              scale: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] },
+              x: { duration: 0.8, delay: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }
             }}
-            className="bg-white flex items-center justify-center"
+            className="bg-black flex items-center justify-center"
           >
             <Magnetic>
               <CodeTerminal />
@@ -304,45 +296,44 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             initial={{ 
               opacity: 1,
               x: "100%",
-              scale: 0.7,
-              rotateY: 15
+              scale: 0.8,
             }}
             animate={{ 
               opacity: 1,
               x: 0,
               scale: 1,
-              rotateY: 0
             }}
             exit={{ 
               opacity: 0,
-              scale: 0.9
+              scale: 1
             }}
             transition={{ 
-              duration: 0.8,
-              ease: [0.25, 0.46, 0.45, 0.94]
+              x: { duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94] },
+              scale: { duration: 0.8, delay: 1.2, ease: [0.25, 0.46, 0.45, 0.94] }
             }}
-            className="fixed inset-0 flex items-center justify-center p-4"
+            className="fixed inset-0 flex items-center justify-center p-4 bg-black"
             onClick={handleModalClose}
           >
             <AnimatedBackground isTransitioning={isTransitioning}/>
             
             <motion.div
               initial={{ 
-                scale: isDetaching ? 0.92 : 1
+                scale: 0
               }}
               animate={{ 
-                scale: isDetaching ? 0.92 : 1
+                scale: 1
               }}
-              transition={{ 
-                duration: 0.8,
+              transition={{
+                delay: 1,
+                duration: 0.5,
                 ease: [0.25, 0.46, 0.45, 0.94]
               }}
-              className="p-8 max-w-lg w-full text-center relative z-10 border border-white bg-black"
+              className="p-8 max-w-lg w-full text-center relative z-10 bg-white"
               onClick={(e) => e.stopPropagation()}
             >
               <AnimatedText 
                 variant="typewriter"
-                className="text-3xl font-bold mb-6 text-white"
+                className="text-3xl font-bold mb-6 text-black"
                 staggerDelay={0.03}
               >
                 Welcome to my website!
@@ -351,14 +342,14 @@ export default function Preloader({ onComplete }: PreloaderProps) {
               <AnimatedElement variant="fadeInUp" delay={0.4}>
                 <AnimatedText 
                   variant="slideUp"
-                  className="text-white  text-lg"
+                  className="text-black  text-lg"
                   staggerDelay={0.02}
                 >
                   Here you will find my projects, skills
                 </AnimatedText>
                 <AnimatedText 
                   variant="slideUp"
-                  className="text-white mb-8 text-lg"
+                  className="text-black mb-8 text-lg"
                   staggerDelay={0.02}
                 >
                 and experiences as a developer.
@@ -369,7 +360,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
                 <Button
                   onClick={handleModalClose}
                   magnetic
-                  className="w-full"
+                  className="w-full border-2 border-black"
                 >
                   Tap to start
                 </Button>

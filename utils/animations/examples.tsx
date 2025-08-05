@@ -1,7 +1,7 @@
 "use client"
 
-import AnimatedElement from "@/components/animations/AnimatedElement"
-import AudioWaveform from "@/components/animations/AudioWaveform"
+import AnimatedElement from "@/components/animations/animated-element"
+import AudioWaveform from "@/components/animations/audio-waveform"
 
 // Exemplo de como usar o sistema de animações
 
